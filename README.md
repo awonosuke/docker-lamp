@@ -1,6 +1,6 @@
 # docker-lamp
 
-## LAMP Details
+## LAMP Environment Details
 
 at 2023-04-21
 
