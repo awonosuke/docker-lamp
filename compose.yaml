@@ -1,0 +1,39 @@
+services:
+  web-app:
+    container_name: lamp-web-app
+    build:
+      context: .
+      dockerfile: ./docker/web-app/Dockerfile
+    ports:
+      - ${WEB_APP_PORT:?err}:80
+    volumes:
+      - ${SOURCE_CODE_PATH:?err}/:/var/www/html/
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    container_name: lamp-db
+    image: mysql:5.7
+    platform: linux/amd64
+    ports:
+      - ${DB_PORT:?err}:3306
+    command: mysqld --innodb_use_native_aio=0
+    volumes:
+      - db-store:/var/lib/mysql/
+      - ./docker/db/db/:/docker-entrypoint-initdb.d/
+      - ./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf
+    environment:
+      MYSQL_ROOT_PASSWORD:
+      MYSQL_DATABASE:
+      MYSQL_USER:
+      MYSQL_PASSWORD:
+    tty: true
+    restart: always
+    healthcheck:
+      test: mysql -u ${MYSQL_USER:?err} -p${MYSQL_PASSWORD:?err} || exit 1
+      interval: 3s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+volumes:
+  db-store:
