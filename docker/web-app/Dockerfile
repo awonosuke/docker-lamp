@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && docker-php-ext-install \
   intl \
   pdo_mysql
-#  && a2enmod rewrite # if you need to enable mod_rewrite remove the # from the beginning of this line
+#  && a2enmod rewrite # if you need to enable mod_rewrite remove the "#" from the beginning of this line
 
 COPY ./docker/web-app/php.ini ${PHP_INI_DIR}
 
